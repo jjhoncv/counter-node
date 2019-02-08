@@ -2,41 +2,52 @@ const exec = require('child_process').exec
 const express = require('express')
 const app = express()
 const moment = require('moment');
-const CountdownGenerator = require('./libs/countdown-generator');
+const wget = require('node-wget');
+
+// const CountdownGenerator = require('./libs/countdown-generator');
 
 app.use(express.static('public'))
 
-var path = `/public/static/imgs/`
+var path = `/public/static/imgs/counter.gif`
 const tmpDir = __dirname + path;
 
 
 app.get('/send', function (req, res) {
-  // console.log(req)
-  var { subject, email, date, timer, remaining } = req.query;
-  // // 2019-09-24T20:35
-  
-  // var duration = moment(`${date} ${timer}`, 'MMM DD, YYYY hh:mm a').format('YYYY-MM-DDThh:mm')
-  // // console.log(duration.toString())
-  // console.log(`wget -O ${path} https://date-gif.herokuapp.com/generate\?time\=${duration.toString()}\&name\=counter.gif`)
-  // exec(`wget -O ${path} https://date-gif.herokuapp.com/generate\?time\=${duration.toString()}\&name\=counter.gif`, function(){
-  //   res.send(arguments);
-  // })
-  
+    // console.log(req)
+    var { subject, email, date, timer, remaining } = req.query;
+    // // 2019-09-24T20:35
 
-  // moment(`${date} ${timer}`, )
-  // subject: 'awd aw',
-  // email: 'jjhoncv@gmail.com',
-  // date: 'Feb 07, 2019',
-  // timer: '06:43 PM',
-  // remaining:
+    var duration = moment(`${date} ${timer}`, 'MMM DD, YYYY hh:mm a').format('YYYY-MM-DDThh:mm')
+    console.log(duration.toString())
+    // console.log(`wget -O ${path} https://date-gif.herokuapp.com/generate\?time\=${duration.toString()}\&name\=counter.gif`)
+    let url = `https://date-gif.herokuapp.com/generate\?time\=${duration.toString()}\&name\=counter.gif`
+    let request = `wget -O ${path} ${url}`;
+    // console.log(request)
+    console.log(url)
 
-  CountdownGenerator.init(remaining, () => {
-    let filePath = tmpDir + name + '.gif';
-    res.sendFile(filePath);
-});
+    wget({dest: tmpDir, url: url}, function () {
+        res.send(arguments);
+    })
+
+    // exec(request, function(){
+    //   res.send(arguments);
+    // })
+
+
+    // moment(`${date} ${timer}`, )
+    // subject: 'awd aw',
+    // email: 'jjhoncv@gmail.com',
+    // date: 'Feb 07, 2019',
+    // timer: '06:43 PM',
+    // remaining:
+
+    // CountdownGenerator.init(remaining, () => {
+    //     let filePath = tmpDir + name + '.gif';
+    //     res.sendFile(filePath);
+    // });
 
 })
- 
+
 app.listen(3000)
 
 // console.log(process.argv[2]);

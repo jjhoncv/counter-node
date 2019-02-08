@@ -72,15 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
   $("form").on("submit", function(e){
     e.preventDefault();
     var data = $("form").serializeArray();
-    // console.log('data', data)
     $.get("http://localhost:3000/send", data, function(response){
-      console.log('response', response )
+      console.log("response")
+      $(".image img").remove()
+      $(".image").append(`<img src="static/imgs/counter.gif?${Math.random()}">`)
     })
   })
-  // function submit(){
-
-  //   alert();
-  // }
-
 });
 
